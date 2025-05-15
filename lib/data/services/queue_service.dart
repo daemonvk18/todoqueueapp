@@ -6,7 +6,7 @@ import '../models/task_model.dart';
 class QueueService {
   final Queue _queue = Queue();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  static const int maxRetries = 3;
+  static const int maxretries = 3;
   static const Duration delay = Duration(seconds: 5);
 
   Future<void> addTask(Task task) async {
@@ -15,7 +15,7 @@ class QueueService {
     await _queue.add(() async {
       await Future.delayed(delay);
       int attempt = 0;
-      while (attempt < maxRetries) {
+      while (attempt < maxretries) {
         try {
           // Update status to 'uploaded' after delay
           await _firestore.collection('tasks').doc(task.id).update({
@@ -25,9 +25,9 @@ class QueueService {
           return;
         } catch (e) {
           attempt++;
-          if (attempt == maxRetries) {
+          if (attempt == maxretries) {
             print(
-                'Failed to upload task ${task.id} after $maxRetries attempts');
+                'Failed to upload task ${task.id} after $maxretries attempts');
             rethrow;
           }
           await Future.delayed(Duration(seconds: attempt * 2));
