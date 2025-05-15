@@ -87,3 +87,7 @@ lib/router/: Configures navigation using GoRouter (app_router.dart).
 lib/main.dart: Entry point, initializing Firebase and setting up providers.
 
 This structure separates concerns, making the codebase modular and easy to extend.
+## Login Credentials
+
+email:preetham@gmail.com
+password:preetham
