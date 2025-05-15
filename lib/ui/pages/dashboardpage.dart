@@ -62,7 +62,7 @@ class DashboardScreen extends StatelessWidget {
             } else if (state is TaskError) {
               return Center(child: Text(state.message));
             }
-            return const Center(child: Text('No tasks'));
+            return const Center(child: Text('No tasks found'));
           },
         ),
       ),

@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
               TextField(
