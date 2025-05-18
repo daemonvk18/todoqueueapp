@@ -4,7 +4,7 @@ class Task {
   final String id;
   final String title;
   final String description;
-  final String status; // 'queued' or 'uploaded'
+  String status; // 'queued' or 'uploaded'
   final String userId;
 
   Task({
@@ -15,6 +15,7 @@ class Task {
     required this.userId,
   });
 
+  //conversion of task -> json data
   Map<String, dynamic> toMap() {
     return {
       'title': title,
@@ -25,6 +26,7 @@ class Task {
     };
   }
 
+  //conversion of the json data -> task data
   factory Task.fromMap(String id, Map<String, dynamic> map) {
     return Task(
       id: id,

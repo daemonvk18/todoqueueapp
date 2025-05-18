@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:queue/queue.dart';
-import '../models/task_model.dart';
+import 'package:todoqueueapp/data/models/task_model.dart';
 
 class QueueService {
   final Queue _queue = Queue();
@@ -10,27 +10,31 @@ class QueueService {
   static const Duration delay = Duration(seconds: 5);
 
   Future<void> addTask(Task task) async {
-    // Set initial status to 'queued' in Firestore
-    await _firestore.collection('tasks').doc(task.id).set(task.toMap());
+    // marked task as 'queued' locally for UI purposes
+    task.status = 'queued';
+
+    //  Added to internal queue for delayed Firestore upload
     await _queue.add(() async {
+      //  Wait for the delay
       await Future.delayed(delay);
+
       int attempt = 0;
       while (attempt < maxretries) {
         try {
-          // Update status to 'uploaded' after delay
-          await _firestore.collection('tasks').doc(task.id).update({
+          // Upload to Firestore with status 'uploaded'
+          await _firestore.collection('tasks').doc(task.id).set({
+            ...task.toMap(),
             'status': 'uploaded',
-            'updatedAt': FieldValue.serverTimestamp(),
+            'createdAt': FieldValue.serverTimestamp(),
           });
           return;
         } catch (e) {
           attempt++;
           if (attempt == maxretries) {
-            print(
-                'Failed to upload task ${task.id} after $maxretries attempts');
             rethrow;
           }
-          await Future.delayed(Duration(seconds: attempt * 2));
+          await Future.delayed(
+              Duration(seconds: attempt * 2)); // Exponential backoff
         }
       }
     });
